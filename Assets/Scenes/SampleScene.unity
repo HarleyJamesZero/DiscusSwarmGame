@@ -155,6 +155,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5459adbad19d649ff892dcef6a13d107, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 1
+  grabRange: 1
 --- !u!114 &366426518
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -348,7 +350,7 @@ Rigidbody2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 366426516}
   m_BodyType: 0
-  m_Simulated: 1
+  m_Simulated: 0
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
