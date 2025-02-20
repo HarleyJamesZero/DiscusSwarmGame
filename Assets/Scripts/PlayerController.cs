@@ -65,19 +65,20 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         moveDirection = moveInputAction.ReadValue<Vector2>().normalized;
-        Debug.Log(moveDirection);
+        //Debug.Log(moveDirection);
+        
     }
 
     private void FixedUpdate()
     {
         //transform.position += (Vector3)moveDirection.normalized*Time.deltaTime*5f; // this is for instant movement by moving the position directly (not good supposedly)
-        playerRB.velocity = moveDirection * speed;
-
+        playerRB.velocity = moveDirection * speed * Time.fixedDeltaTime;
+        Debug.Log(playerRB.velocity);
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawSphere(transform.position, grabRange);
+        Gizmos.DrawWireSphere(transform.position, grabRange);
     }
 }
