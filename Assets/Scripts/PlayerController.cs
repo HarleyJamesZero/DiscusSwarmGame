@@ -20,6 +20,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float speed = 1f;
     [SerializeField] private float grabRange = 1f;
 
+    [SerializeField] private LayerMask playerLayer;
+
     private void Awake()
     {
         playerInput = new PlayerInput(); // this is a type of InputActionAsset but references the created asset
@@ -31,6 +33,10 @@ public class PlayerController : MonoBehaviour
         grabInputAction.performed += OnGrabPerformed; //subscribe the method to  ".performed" 
 
         playerRB = this.GetComponent<Rigidbody2D>();
+    }
+
+    void Start()
+    {
     }
 
     private void OnEnable()
@@ -49,16 +55,16 @@ public class PlayerController : MonoBehaviour
         grabInputAction.performed -= OnGrabPerformed; //Unsubscribing to prevent memory leak
     }
 
+    private Collider2D? grabbedObject;
     private void OnGrabPerformed(InputAction.CallbackContext context)
     {
         Debug.Log("Player Grabbing");
-    }
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+        grabbedObject= Physics2D.OverlapCircle(transform.position, grabRange, ~playerLayer);// this will have to be changed to OverlapCircleAll to get every thing that enters the collider
+        if (grabbedObject != null)
+        {
+            Debug.Log(grabbedObject);
+            grabbedObject.transform.SetParent(transform);
+        }
     }
 
     // Update is called once per frame
@@ -73,7 +79,6 @@ public class PlayerController : MonoBehaviour
     {
         //transform.position += (Vector3)moveDirection.normalized*Time.deltaTime*5f; // this is for instant movement by moving the position directly (not good supposedly)
         playerRB.velocity = moveDirection * speed * Time.fixedDeltaTime;
-        Debug.Log(playerRB.velocity);
     }
 
     private void OnDrawGizmos()
