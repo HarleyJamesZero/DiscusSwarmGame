@@ -438,6 +438,22 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3897590261891668389, guid: 8638f8d9a1de84d4e94e234f266c3dae, type: 3}
+      propertyPath: orbitRadius
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3897590261891668389, guid: 8638f8d9a1de84d4e94e234f266c3dae, type: 3}
+      propertyPath: acceleration
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3897590261891668389, guid: 8638f8d9a1de84d4e94e234f266c3dae, type: 3}
+      propertyPath: rotationSpeed
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3897590261891668389, guid: 8638f8d9a1de84d4e94e234f266c3dae, type: 3}
+      propertyPath: maxRotationSpeed
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3897590261891668389, guid: 8638f8d9a1de84d4e94e234f266c3dae, type: 3}
       propertyPath: playerLayer.m_Bits
       value: 64
       objectReference: {fileID: 0}

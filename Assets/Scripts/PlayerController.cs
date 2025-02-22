@@ -22,6 +22,13 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private LayerMask playerLayer;
 
+    [SerializeField] private float rotationSpeed = 50f;
+    [SerializeField] private float orbitRadius = 2f;
+    private float currentRotationSpeed = 0f;
+    private float angle = 0f;
+    [SerializeField] private float acceleration = 5f;
+    [SerializeField] private float maxRotationSpeed = 200f;
+
     private void Awake()
     {
         playerInput = new PlayerInput(); // this is a type of InputActionAsset but references the created asset
@@ -56,15 +63,42 @@ public class PlayerController : MonoBehaviour
     }
 
     private Collider2D? grabbedObject;
+    private Vector2 relativePositionOfGrabbed;
     private void OnGrabPerformed(InputAction.CallbackContext context)
     {
+        //how do I know if its being held down?
         Debug.Log("Player Grabbing");
         grabbedObject= Physics2D.OverlapCircle(transform.position, grabRange, ~playerLayer);// this will have to be changed to OverlapCircleAll to get every thing that enters the collider
         if (grabbedObject != null)
         {
+            //set the position to the radius in the direction of the grabbed object, then start circling left or right
             Debug.Log(grabbedObject);
+            relativePositionOfGrabbed = transform.InverseTransformPoint(grabbedObject.transform.position);
+            Debug.Log(relativePositionOfGrabbed);
             grabbedObject.transform.SetParent(transform);
+            grabbedObject.GetComponent<BoxCollider2D>().enabled = false;
         }
+    }
+
+    private void RotatingAroundPlayer()
+    {
+        //sets new rotation speed by adding acceleration, limits rotation speed to under max.
+        currentRotationSpeed = Mathf.Min(currentRotationSpeed + acceleration * Time.deltaTime, maxRotationSpeed);
+
+        //angle starts at 0 here (to the right of the player) so if you want the angle of grab it will have to take that into account, +pi/2 for directly up
+        angle += currentRotationSpeed * Time.deltaTime;
+
+        //changing the cos and sin changes the direction of the swing
+        // x goes from 1 to 0 to -1 to 0 
+        // y goes from 0 to 1 to 0 to -1
+        // together they form a circular path
+        // x = r*cos(angle) y=r*sin(angle)
+        Vector3 offset = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * orbitRadius;
+
+        if (grabbedObject == null) return;
+        grabbedObject.transform.position = transform.position + offset;
+
+
     }
 
     // Update is called once per frame
@@ -72,7 +106,7 @@ public class PlayerController : MonoBehaviour
     {
         moveDirection = moveInputAction.ReadValue<Vector2>().normalized;
         //Debug.Log(moveDirection);
-        
+        RotatingAroundPlayer();
     }
 
     private void FixedUpdate()
