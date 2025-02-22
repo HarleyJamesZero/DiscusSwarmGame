@@ -80,33 +80,50 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void RotatingAroundPlayer()
+    private void RotatingAroundPlayerNOPHYSICS()
     {
+        //... will eventually need a function to get the vector component that aligns with the spin, and return the speed(magnitude) of that vector.. how to do this while keeping the sign of the vector
+
         //sets new rotation speed by adding acceleration, limits rotation speed to under max.
         currentRotationSpeed = Mathf.Min(currentRotationSpeed + acceleration * Time.deltaTime, maxRotationSpeed);
+            // changing the acceleration here to a negative would be for other direction?
 
         //angle starts at 0 here (to the right of the player) so if you want the angle of grab it will have to take that into account, +pi/2 for directly up
         angle += currentRotationSpeed * Time.deltaTime;
 
-        //changing the cos and sin changes the direction of the swing
-        // x goes from 1 to 0 to -1 to 0 
-        // y goes from 0 to 1 to 0 to -1
-        // together they form a circular path
-        // x = r*cos(angle) y=r*sin(angle)
         Vector3 offset = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * orbitRadius;
+            //changing the cos and sin changes the direction of the swing
+            // x goes from 1 to 0 to -1 to 0 (starting on the right of the player)
+            // y goes from 0 to 1 to 0 to -1 (starting on the same height as the player)
+            // together they form a circular path
+            // x = r*cos(angle) y=r*sin(angle)
 
         if (grabbedObject == null) return;
         grabbedObject.transform.position = transform.position + offset;
+            //this manipulates the position of the object rather than the velocity, but we will have the velocity in the currentRotationSpeed.
 
-
+        //TO ADD
+        // - have to make a way for the object to rotate around the player correctly, rotating to face towards the player as it rotates
+        // - angle at time of grab kept when starting spin
+        // - HOLD mechanic, left for rotating left, right click for rotating right
+        // - ...and subsequently, let go mechanic, keeping velocity and direction at that point
+        // - Speed kept when grabbed
+        // - ...Speed in the right direction kept when grabbed
     }
+
+    private void RotatingAroundPlayerPhysically()
+    {
+        //i think it would be better for the game feel to have it really fling out so I dont know if that would be better with physics or not.
+        //if I was going to do otherwise id be faking the effects of physically weighted objects
+    }
+
 
     // Update is called once per frame
     void Update()
     {
         moveDirection = moveInputAction.ReadValue<Vector2>().normalized;
         //Debug.Log(moveDirection);
-        RotatingAroundPlayer();
+        RotatingAroundPlayerNOPHYSICS();
     }
 
     private void FixedUpdate()
